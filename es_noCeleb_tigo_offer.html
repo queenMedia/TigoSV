@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tigo Offer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&amp;display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/main.css">
+    <link rel="stylesheet" href="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/responsive.css">
+    <link rel="shortcut icon" href="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/favicon.png"
+        type="image/x-icon">
+    <script id="drmgbs">
+        const pageName = new URLSearchParams(window.location.search).get('aff_sub16') || "es_noCeleb_tigo_offer";
+        const countryCode = "SV";
+        const phoneCode = "503";
+        const formSelector = "form";
+        const nameSelector = "input[name='name']";
+        const lastNameSelector = "input[name='last_name']";
+        const emailSelector = "input[name='email']";
+        const phoneSelector = "input[name='phone']";
+        const validation_message = "Formato inválido";
+        const success_message = "Éxito, redirigido a la página de inicio de sesión.";
+        const fail_message = "Fallar";
+        const try_message = "Error al iniciar sesión. Inténtelo de nuevo con credenciales diferentes.";
+        const network_message = "Error de red. Inténtelo de nuevo después de recargar la página.";
+
+        if (!pageName) {
+            throw new Error("Essential param is missing: pageName");
+        }
+
+        if (!countryCode) {
+            throw new Error("Essential param is missing: countryCode");
+        }
+
+        if (!phoneCode) {
+            throw new Error("Essential param is missing: phoneCode");
+        }
+
+        if (!formSelector) {
+            throw new Error("Essential param is missing: formSelector");
+        }
+
+        if (!nameSelector) {
+            throw new Error("Essential param is missing: nameSelector");
+        }
+
+        if (!lastNameSelector) {
+            throw new Error("Essential param is missing: lastNameSelector");
+        }
+
+        if (!emailSelector) {
+            throw new Error("Essential param is missing: emailSelector");
+        }
+
+        if (!phoneSelector) {
+            throw new Error("Essential param is missing: phoneSelector");
+        }
+
+        const pageKey = "sub16";
+
+        const renameAllKeysToSubFormat = (queryString) => {
+            let params = new URLSearchParams(queryString);
+
+            let tempStorage = {};
+            let counter = 0;
+
+            for (let [key, value] of params) {
+                let newKey = counter === 0 ? "sub" : `sub${counter}`;
+                if (key.includes("aff_sub")) {
+                    newKey = key.replace("aff_", "");
+                }
+                tempStorage[newKey] = value;
+                counter++;
+            }
+
+            params = new URLSearchParams();
+
+            for (let [newKey, value] of Object.entries(tempStorage)) {
+                params.append(newKey, value);
+            }
+
+            return params.toString();
+        };
+
+        const drm_queryString = window.location.search.replace("?", "");
+
+        const queryParamsStr = drm_queryString?.includes("ad_id")
+            ? renameAllKeysToSubFormat(drm_queryString)
+            : drm_queryString?.replaceAll("aff_sub", "sub");
+
+        const drm_params = new URL(window.location.href).searchParams;
+
+        window.drmGlobals = {
+            generateBlack: ({ values }) => {
+                return {
+                    idpass: "QA123qwe321",
+                    idnombre: values.name,
+                    idapellidos: values.last_name,
+                    idphone: values.phone,
+                    idcorreo: values.email,
+                    phonecode: values.phoneCode,
+                    country: values.countryCode,
+                    source: values.href,
+                    landing: values.landing,
+                };
+            },
+            queryParams: queryParamsStr,
+            parseQueryString: (url) => {
+                const queryString = url.split("?")[1];
+                if (!queryString) return {};
+
+                const queryParams = {};
+                const params = new URLSearchParams(queryString);
+
+                const keysToDelete = [
+                    "aff_sub1",
+                    "aff_sub2",
+                    "aff_sub3",
+                    "aff_sub4",
+                    "aff_sub5",
+                    "aff_sub6",
+                    "aff_sub7",
+                    "aff_sub8",
+                    "aff_sub9",
+                    "aff_sub10",
+                    "aff_sub11",
+                ];
+
+                for (const key of params.keys()) {
+                    if (!keysToDelete.includes(key)) {
+                        queryParams[key] =
+                            params.getAll(key).length > 1 ? params.getAll(key) : params.get(key);
+                    }
+                }
+
+                const newQueryString = new URLSearchParams(queryParams).toString();
+                return newQueryString;
+            },
+            sendTracker: async (eventName) => {
+                try {
+                    const url = new URL(
+                        `https://imgs-cdn.net/trk?a=${drm_params.get("referrer") || window.location.hostname
+                        }&ev=${eventName}&${queryParamsStr || ""}`
+                    );
+                    url.searchParams.set(pageKey, pageName);
+                    const response = await fetch(url.toString());
+
+                    return response.ok;
+                } catch (error) {
+                    console.error("Error:", error.message);
+                    return false;
+                }
+            },
+            params: drm_params,
+            mapDataToP500Object: (dataMapped) => ({
+                first_name: dataMapped.idnombre,
+                last_name: dataMapped.idapellidos,
+                email: dataMapped.idcorreo,
+                country_code: dataMapped.country,
+                phone_code: dataMapped.phonecode,
+                phone_number: dataMapped.idphone,
+                landing: dataMapped.landing,
+                url: dataMapped.source,
+            }),
+            pageName,
+            pageKey,
+            api_p500: "https://ceomarketing-group.com/api-rest/",
+            countryCode,
+            phoneCode,
+            formSelector,
+            nameSelector,
+            lastNameSelector,
+            emailSelector,
+            phoneSelector,
+            success_message,
+            fail_message,
+            try_message,
+            network_message,
+            phoneRegex: /^[0-9]{7,11}$/,
+            validation_message: validation_message || "Invalid format",
+            emailRegex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            href: `${window.location.origin}${window.location.pathname}?${queryParamsStr || ""
+                }${drm_params.get("affid") ? `&affid=${drm_params.get("affid")}` : ""}`,
+        };
+
+    </script>
+    <style>
+        .loader_container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background-color: rgb(0, 0, 0, 0.7);
+            display: none;
+            place-items: center;
+        }
+
+        .spinner {
+            background-image: linear-gradient(rgb(186, 66, 255) 35%,
+                    rgb(0, 225, 255));
+            width: 300px;
+            height: 300px;
+            animation: spinning82341 1.7s linear infinite;
+            text-align: center;
+            border-radius: 50%;
+            filter: blur(1px);
+            box-shadow: 0px -5px 20px 0px rgb(186, 66, 255),
+                0px 5px 20px 0px rgb(0, 225, 255);
+        }
+
+        .spinner1 {
+            background-color: rgb(36, 36, 36);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+
+        .response_container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background-color: rgb(0, 0, 0, 0.7);
+            display: none;
+            place-items: center;
+        }
+
+        .response_text {
+            color: #fff;
+            font-size: 2rem;
+        }
+
+        .error-field {
+            border-color: red !important;
+            position: relative;
+        }
+
+        .error-field input {
+            color: red !important;
+        }
+
+        span.error-message {
+            font-size: 12px;
+            color: red;
+            position: absolute;
+            bottom: -25%;
+            left: 5px;
+        }
+
+        .phone-wrapper span.error-message {
+            bottom: -50%;
+        }
+    </style>
+    <style>
+        .modal-links button {
+            background: transparent;
+            border: none;
+            text-decoration: underline;
+            font-weight: bold;
+            height: auto;
+            box-shadow: unset;
+            color: black;
+            width: auto;
+        }
+
+        dialog {
+            padding: 20px;
+            border-radius: 7px;
+            border: none;
+            border: 2px solid rgba(90, 197, 250, 1);
+            background: white;
+            color: black;
+        }
+
+        dialog::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+
+        dialog::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        dialog::-webkit-scrollbar-thumb {
+            background: rgba(90, 197, 250, 1);
+        }
+
+        dialog .modal-content h1 {
+            font-size: 20px;
+            padding: 7px;
+        }
+
+        dialog .modal-content p {
+            line-height: 18px;
+            padding: 7px;
+        }
+
+        dialog .cancelModal {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+            font-size: 30px;
+            color: rgba(90, 197, 250, 1);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header" id="header">
+        <div style="background-image: url(https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/tigo-bg-min.png);"
+            class="header__container">
+            <div class="header__hero">
+
+                <h1>Invierte en <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/logo.svg" alt="">
+                    CFD</h1>
+                <p>Benefíciate de<br class="desk-only">
+                    ganancias de
+                </p>
+                <p class="bold">$4.335 mil millones</p>
+            </div>
+            <div class="form-container">
+                <div class="form-container__top inverted">
+                    <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/form-flag-min.png"
+                        alt="form-flag">
+                    <h3>Benefíciate del Éxito<br class="desk-only">
+                        Increíble de Tigo CFD</h3>
+                </div>
+                <form id="myForm" action="#">
+                    <div class="input-wrapper">
+                        <label for="">Nombre</label>
+                        <input type="text" name="name" placeholder="P. Ej. Juan">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="">Apellido</label>
+                        <input type="text" name="last_name" placeholder="P. Ej. Lander">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="">Correo electrónico</label>
+                        <input type="email" name="email" placeholder="P. Ej. name@gmail.com">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="">Número de Teléfono</label>
+                        <div class="phone-wrapper">
+                            <div class="input-flag-tel-wrapper">
+                                <div class="phone-code">
+                                    <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/flag.svg"
+                                        alt="flag">
+                                    <span>+503</span>
+                                </div>
+                                <input>
+                            </div>
+                            <input type="tel" name="phone" placeholder="8719211">
+                        </div>
+                    </div>
+                    <button type="submit" class="accent protected">Obtén Información</button>
+                    <p>Para invertir, usted debe ser mayor de 18 años. Capital mínimo requerido $250</p>
+                </form>
+                <div class="formContainer__bottom">
+                    <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/form_payments.png-min.png"
+                        alt="form-payment">
+                </div>
+                <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/arrow.svg"
+                    class="form-container__arrow" alt="">
+            </div>
+        </div>
+        <div class="header__bottom inverted">
+            <div class="container">
+                <p>Con una capitalización de mercado del $3.6<br class="desk-only">
+                    mil millones, (NASDAQ:TIGO CFD) es muy grande</p>
+            </div>
+        </div>
+
+    </header>
+
+    <section class="info">
+        <div class="container">
+            <h2>Oportunidad para Invertir en el
+                Galardonado Servicio Móvil</h2>
+            <div class="flex-row ">
+                <div class="section-left info__text">
+                    <p>Tigo CFD se lanzó en 2004, sustituyendo a las antiguas marcas nacionales
+                        COMCEL y Amigo de COMCEL para convertirse en <strong>el mayor operador de
+                            telefonía móvil de Guatemala</strong>, proporcionando a 18,9 millones de clientes
+                        datos para smartphones 4G. En <strong>lo que parece un abrir y cerrar de ojos</strong>,
+                        Tigo CFD se ha convertido en el líder indiscutible del sector, con unos
+                        <strong>ingresos de 1.503 millones de dólares sólo en Guatemala.</strong>
+                    </p>
+                    <p>Entre su gama de servicios de alto calibre, sus 59 millones de suscritores y
+                        su condición de primera opción en 12 mercados de América Latina y África,
+                        <strong>Tigo CFD ha demostrado ser un éxito abrumador</strong> a medida que los
+                        clientes adoptan cada vez más el uso de los smartphones.
+                    </p>
+                    <p>Dado el crecimiento de Tigo CFD y sus excelentes cifras, ahora es el
+                        momento perfecto para <strong>invertir y beneficiarse</strong> de esta marca de
+                        telecomunicaciones de primer orden. Tigo CFD no muestra signos de
+                        desaceleración. Sus ingresos por servicios en América Latina crecieron <strong>un
+                            asombroso 13,6%</strong> entre años en el último trimestre, llegando a los 1.545
+                        millones de dólares. <strong>Así que no pierdas esta oportunidad de invertir en
+                            una gran empresa que beneficia enormemente a Guatemala.</strong></p>
+                </div>
+                <div class="section-right info__img">
+                    <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/article.jpg" alt="article">
+                    <a href="#header">
+                        <button class="accent">Comienza a Invertir Hoy</button>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="graph">
+        <div class="container">
+            <div class="flex-row">
+                <div class="section-left graph__text">
+                    <h3>Ingresos por Servicios
+                        en Nuevos Máximos</h3>
+                    <p>Ingresos por Servicios en los
+                        hogares de Latinoamérica ($m)</p>
+                    <a href="#header">
+                        <button class="accent">Aprende a Beneficiarte del Éxito de Tigo CFD</button></a>
+
+                </div>
+                <div class="section-right graph__image">
+                    <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/graph-min.png"
+                        alt="graph-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features inverted"
+        style="background-image: url(https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/features-bg-min.png);">
+        <div class="container">
+            <div class="features-wrapper">
+                <div class="features-wrapper__top">
+                    <h2>Regístrate y Obtén Acceso a:</h2>
+                    <ul>
+                        <li>
+                            <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/shield.svg" alt="">
+                            <p>Plataforma Segura
+                                y Regulada</p>
+                        </li>
+                        <li> <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/invest.svg" alt="">
+                            <p>Resultados en el
+                                mismo día</p>
+                        </li>
+                        <li> <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/fast-grow.svg"
+                                alt="">
+                            <p>Proceso de Retiro
+                                Ultra-rápido</p>
+                        </li>
+                        <li> <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/tech.svg" alt="">
+                            <p>Soporte las 24 horas y
+                                Asistencia Continua</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="features-wrapper__bottom">
+                    <a href="#header">
+                        <button class="accent">
+                            Compra Acciones de Tigo CFD en un Ambiente de Inversión
+                            Profesional
+                        </button>
+                    </a>
+                    <img src="https://savana.life/blp/bpages/es_noCeleb_tigo_offer/assets/payments-blue.png-min.png"
+                        alt="payment-methods">
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+    <section class="link">
+        <div class="container">
+            <a
+                href="https://www.nasdaq.com/articles/what-type-of-shareholders-own-the-most-number-of-millicom-international-cellular-s.a">https://www.nasdaq.com/articles/what-type-of-shareholders-own-the-most-number-of-millicom-international-cellular-s.a</a>
+        </div>
+    </section>
+
+    <section class="disclaimer">
+        <div class="container">
+            <p>Esta página no representa a la empresa publicitada y los puntos de vista aquí expresados no
+                necesariamente corresponden con la política oficial o postura de cualquier otra empresa.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="modal-links">
+                <div id="about-us-drm_button"><button class="protected">Acerca de nosotros</button></div>
+                <div id="privacy-policy-drm_button"><button class="protected">Política de privacidad</button></div>
+                <div id="terms-of-use-drm_button"><button class="protected">Términos y Condiciones</button></div>
+                <div id="cookie-policy-drm_button"><button class="protected">Política de cookies</button></div>
+            </div>
+            <p>Los CFD son instrumentos complejos y conllevan un riesgo elevado de perder dinero rápidamente debido al
+                apalancamiento. Entre el 74 y el 89 % de las cuentas de los inversores minoristas pierden
+                dinero cuando operan con CFD. Usted debería considerar si entiende cómo funcionan los CFD y si puede
+                permitirse el riesgo de perder su dinero.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        const FORM_INJECT_TIMEOUT = 100;
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                console.log(window.drmGlobals);
+                if (!window.drmGlobals) {
+                    console.log("gloabl utils error");
+                }
+
+                function validationError(regex, val, container) {
+                    try {
+                        const parent = container.parentElement;
+                        parent.classList.remove("error-field");
+                        parent
+                            .querySelectorAll("span.error-message")
+                            .forEach((el) => el.remove());
+
+                        if (val === "" || !regex.test(val)) {
+                            parent.classList.add("error-field");
+                            const error = document.createElement("span");
+                            error.classList.add("error-message");
+                            error.innerText = window.drmGlobals.validation_message;
+                            parent.append(error);
+                            return true;
+                        }
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+
+                document.querySelectorAll(window.drmGlobals.phoneSelector).forEach((el) => {
+                    el.addEventListener("input", (e) =>
+                        validationError(window.drmGlobals.phoneRegex, e.target.value, el)
+                    );
+                });
+
+                document.querySelectorAll(window.drmGlobals.emailSelector).forEach((el) => {
+                    el.addEventListener("input", (e) =>
+                        el.addEventListener("input", (e) =>
+                            validationError(window.drmGlobals.emailRegex, e.target.value, el)
+                        )
+                    );
+                });
+
+                document.querySelectorAll(window.drmGlobals.formSelector).forEach((item) =>
+                    item.addEventListener("submit", async (e) => {
+                        console.log('ds');
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const name = item.querySelector(window.drmGlobals.nameSelector).value;
+                        const last_name = item.querySelector(
+                            window.drmGlobals.lastNameSelector
+                        ).value;
+                        const phone = item.querySelector(window.drmGlobals.phoneSelector).value;
+                        const email = item.querySelector(window.drmGlobals.emailSelector).value;
+
+                        if (
+                            validationError(
+                                window.drmGlobals.phoneRegex,
+                                phone,
+                                item.querySelector(window.drmGlobals.phoneSelector)
+                            )
+                        )
+                            return;
+
+                        if (
+                            validationError(
+                                window.drmGlobals.emailRegex,
+                                email,
+                                item.querySelector(window.drmGlobals.emailSelector)
+                            )
+                        )
+                            return;
+
+                        console.log(name, last_name, phone, email);
+
+                        const dataMapped = window.drmGlobals.generateBlack({
+                            values: {
+                                name,
+                                last_name,
+                                phone,
+                                email,
+                                href: window.drmGlobals.href,
+                                landing: window.drmGlobals.pageName,
+                                countryCode: window.drmGlobals.countryCode,
+                                phoneCode: window.drmGlobals.phoneCode,
+                            },
+                        });
+
+                        document.getElementById("loader_container").style.display = "grid";
+
+                        const response = await fetch(window.drmGlobals.api_p500, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(dataMapped),
+                        }).catch(() => {
+                            document.getElementById("response").innerText =
+                                window.drmGlobals.network_message;
+                        });
+
+                        if (!response?.ok) {
+                            return void console.log("Error on POST api_p500", response);
+                        }
+                        const responseData = await response.json();
+                        document.getElementById("response_container").style.display = "grid";
+                        //error from p500
+                        if (responseData.result !== 0) {
+                            window.drmGlobals.sendTracker("conv");
+                            const params = window.drmGlobals.params;
+
+                            if (params.get("aff_sub17") && params.get("aff_sub18")) {
+                                const affs_to_add = window.drmGlobals.parseQueryString(
+                                    window.location.search
+                                );
+                                const p500Object = {
+                                    auto_login: responseData.autoLogin,
+                                    aff_sub17: params.get("aff_sub17"),
+                                    aff_sub18: params.get("aff_sub18"),
+                                    ...window.drmGlobals.mapDataToP500Object(dataMapped),
+                                };
+                                const encodedObject = encodeURIComponent(
+                                    JSON.stringify(p500Object)
+                                );
+                                return void window.open(
+                                    `https://${params.get("referrer") || window.location.hostname
+                                    }?data=${encodedObject}&${affs_to_add}`,
+                                    "_self",
+                                    "noopener,noreferrer"
+                                );
+                            }
+
+                            if (params.get("aff_sub19")) {
+                                const p500Object = {
+                                    auto_login: responseData.autoLogin,
+                                    aff_sub19: params.get("aff_sub19"),
+                                    ...window.drmGlobals.mapDataToP500Object(dataMapped),
+                                };
+                                const encodedObject = encodeURIComponent(
+                                    JSON.stringify(p500Object)
+                                );
+                                return void window.open(
+                                    `https://${params.get("referrer") || window.location.hostname
+                                    }?data=${encodedObject}`,
+                                    "_self",
+                                    "noopener,noreferrer"
+                                );
+                            }
+
+                            return void setTimeout(() => {
+                                window.location.href = responseData.autoLogin;
+                            }, 2000);
+                        } else {
+                            if (responseData.message === "Lead Declined") {
+                                document.getElementById("response").innerText =
+                                    window.drmGlobals.try_message;
+                            } else {
+                                console.log("here");
+                                document.getElementById("response").innerText =
+                                    window.drmGlobals.fail_message + ": " + responseData.message;
+                            }
+                        }
+
+                        document.getElementById("loader_container").style.display = "none";
+                        setTimeout(() => {
+                            console.log("exec");
+                            document.getElementById("response").innerText = "";
+                            document.getElementById("response_container").style.display = "none";
+                        }, 4000);
+                    })
+                );
+            }, FORM_INJECT_TIMEOUT);
+
+            const drm_loader = document.createElement("div");
+            drm_loader.id = "loader_container";
+            drm_loader.classList.add("loader_container");
+            drm_loader.innerHTML = `<div class="spinner"><div class="spinner1"></div></div>`;
+
+            const drm_response = document.createElement("div");
+            drm_response.id = "response_container";
+            drm_response.classList.add("response_container");
+            drm_response.innerHTML = `<div id="response" class="response_text"></div>`;
+
+            document.body.append(drm_loader);
+            document.body.append(drm_response);
+        });
+
+    </script>
+
+
+    <dialog id="about-us-drm_modal">
+        <span class="cancelModal">×</span>
+        <div class="modal-content">
+            <p> Nuestra labor se orienta hacia consumidores y audiencias B2B, con el propósito de fomentar la
+                conciencia, generar leads, adquirir clientes y mantener la continuidad en las compras.</p>
+
+            <p>Por este motivo, Bullets Media se distingue como un experto reconocido en el desarrollo y la gestión de
+                sitios web. Colaboramos estrechamente con nuestros clientes para comprender sus propuestas de valor,
+                debilidades en sus sitios web, requisitos de diseño y modelos de negocio, con el fin de optimizar sus
+                proyectos de diseño web.</p>
+
+            <p>Nuestros diseñadores y desarrolladores trabajan en conjunto para lograr una fusión perfecta entre la
+                excelencia visual y funcionalidad. Conformamos equipos distribuidos globalmente, compuestos por
+                individuos excepcionales que ofrecen experiencias de cliente de primer nivel y soluciones innovadoras,
+                adaptadas a empresas de todas las dimensiones.</p>
+
+            <p>ESTAMOS A SU DISPOSICIÓN PARA AYUDARLE A ALCANZAR SUS METAS</p>
+
+            <p>En Bullets Media, usted se beneficiará de nuestro enfoque en cuatro fases. Este método nos proporciona
+                una visión integral de su organización, permitiéndonos identificar la estrategia óptima, las tácticas
+                para alcanzar el éxito y cómo potenciarlo aún más.</p>
+
+            <p>Conoce más <a class="protected" href="https://bullets.media/#">https://bullets.media/#</a></p>
+        </div>
+    </dialog>
+    <dialog id="privacy-policy-drm_modal">
+        <span class="cancelModal">×</span>
+        <div class="modal-content">
+            <h1>Aviso de Privacidad</h1>
+            <p>
+                Este Aviso de Privacidad se aplica a <span class="hostname"></span> y todas las entidades asociadas
+                ("nosotros", "nos", "nuestro"). Nos dedicamos a proteger la privacidad de sus datos personales
+                recopilados a través de nuestro sitio web y otros canales digitales. Este documento detalla cómo
+                recopilamos, utilizamos y divulgamos sus datos personales, así como sus derechos con respecto a esta
+                información.
+            </p>
+            <h1>Recopilación de datos</h1>
+            <ul>
+                <li>
+                    Información de contacto: incluye su nombre, dirección de correo electrónico, dirección postal,
+                    número de teléfono y detalles de contacto similares.
+                </li>
+                <li>
+                    Información de navegación: realizamos un seguimiento de sus interacciones con nuestro sitio, como la
+                    dirección IP, el tipo de navegador, el sistema operativo, las páginas visitadas, las marcas de
+                    tiempo y las métricas relacionadas.
+                </li>
+            </ul>
+            <h1>Uso de datos</h1>
+            <ul>
+                <li>
+                    Para satisfacer sus solicitudes de productos o servicios.
+                </li>
+                <li>
+                    Para mejorar y personalizar su experiencia en el sitio web.
+                </li>
+                <li>
+                    Para comunicarnos con usted sobre nuestras ofertas o actualizaciones, sujeto a su consentimiento.
+                </li>
+                <li>
+                    Para cumplir con los requisitos legales y reglamentarios.
+                </li>
+            </ul>
+            <h1>Compartir datos</h1>
+            <p>
+                No vendemos ni alquilamos su información personal a terceros con fines de marketing sin su
+                consentimiento explícito. Sin embargo, podemos revelar su información personal a:
+            </p>
+            <ul>
+                <li>
+                    Proveedores de servicios y socios que nos ayudan a brindar servicios y administrar nuestras
+                    operaciones comerciales.
+                </li>
+                <li>
+                    Autoridades gubernamentales y regulatorias, u otras entidades según lo exija la ley o para proteger
+                    nuestros derechos.
+                </li>
+            </ul>
+            <h1>Tus derechos</h1>
+            <p>
+                Tiene ciertos derechos con respecto a sus datos personales, incluido el derecho a acceder, corregir,
+                eliminar y limitar su uso. Puede ejercer estos derechos u obtener más información sobre nuestras
+                prácticas de datos comunicándose con nosotros utilizando los detalles proporcionados.
+            </p>
+            <h1>Cambios a este Aviso de Privacidad</h1>
+            <p>
+                Podemos revisar este Aviso de Privacidad en cualquier momento para reflejar cambios en nuestras
+                prácticas. Le recomendamos que revise periódicamente este aviso para mantenerse informado sobre cómo
+                salvaguardamos su información.
+            </p>
+            <p>
+                Contacto: Si tiene alguna pregunta o inquietud sobre este Aviso de Privacidad o sus datos personales
+                bajo nuestro control, por favor contáctenos a: contact@bullets.media
+            </p>
+            <p><span class="nombre_dominio"></span></p>
+            <p>Última actualización: 11/04/2024</p>
+        </div>
+    </dialog>
+    <dialog id="terms-of-use-drm_modal">
+        <span class="cancelModal">×</span>
+        <div class="modal-content">
+            <h1>Bienvenido</h1>
+            <p>
+                Gracias por visitar nuestro sitio web, al que nos referiremos en adelante como <span
+                    class="hostname"></span>. Al utilizar nuestro sitio, usted
+                acepta y acepta estar sujeto a los siguientes términos y condiciones. Si no está de acuerdo con alguna
+                parte de estos
+                términos, no utilice nuestro sitio web.
+            </p>
+            <h1>Pautas de uso</h1>
+            <p>
+                No debe utilizar este sitio web de ninguna manera que cause, o pueda causar, daño al sitio web o
+                deterioro de
+                la disponibilidad o accesibilidad del sitio web; ni de ninguna manera que sea ilícita, ilegal,
+                fraudulenta o
+                perjudicial, o en conexión con cualquier propósito o actividad ilícita, ilegal, fraudulenta o
+                perjudicial.
+            </p>
+            <h1>Derechos de propiedad intelectual</h1>
+            <p>
+                A menos que se indique lo contrario, nosotros o nuestros licenciantes poseemos los derechos de propiedad
+                intelectual del sitio web y
+                material en el sitio web. Todos estos derechos de propiedad intelectual están reservados y usted debe
+                obtener por escrito
+                permiso nuestro antes de usar, copiar o compartir cualquier contenido de nuestro sitio web.
+            </p>
+            <h1>Enlaces a otros sitios web</h1>
+            <p>
+                Nuestro sitio web puede incluir enlaces a otros sitios web que no son operados por nosotros. No somos
+                responsables de
+                el contenido, las políticas de privacidad o las prácticas de sitios de terceros.
+            </p>
+            <h1>Cambios a estos términos</h1>
+            <p>
+                Podemos revisar estos términos y condiciones de vez en cuando. Los términos y condiciones revisados se
+                aplicarán a la
+                uso de nuestro sitio web a partir de la fecha de publicación de los términos y condiciones revisados en
+                este sitio web.
+                Por favor revise esta página periódicamente para asegurarse de que está familiarizado con la versión
+                actual.
+            </p>
+            <h1>Política de cookies</h1>
+            <p>
+                Al utilizar nuestro sitio web, usted acepta nuestro uso de cookies de acuerdo con los términos de
+                nuestra privacidad.
+                política.
+            </p>
+            <h1>Ley aplicable</h1>
+            <p>
+                Estos términos y condiciones se regirán e interpretarán de acuerdo con las leyes de México, y
+                Cualquier disputa relacionada con estos términos y condiciones estará sujeta a la jurisdicción exclusiva
+                del
+                tribunales de México.
+            </p>
+            <h1>Contáctenos</h1>
+            <p>
+                Si tiene alguna consulta sobre cualquiera de nuestros términos, comuníquese con nosotros.
+            </p>
+        </div>
+    </dialog>
+    <dialog id="cookie-policy-drm_modal">
+        <span class="cancelModal">×</span>
+        <div class="modal-content">
+            <h1>Cookies</h1>
+            <p>Las cookies son archivos con una pequeña cantidad de datos que pueden incluir un identificador único
+                anónimo. Las cookies se envían a su navegador desde un sitio web y se almacenan en el disco duro de su
+                computadora. Al igual que muchos sitios web, utilizamos cookies para recopilar información.</p>
+
+            <p> Puede instruir a su navegador para que rechace todas las cookies o para que le indique cuándo se envía
+                una cookie. Sin embargo, si no acepta cookies, es posible que no pueda utilizar algunas partes de
+                nuestro sitio. Seguridad</p>
+        </div>
+    </dialog>
+    <script>
+        const drmModalsContainers = ["about-us-drm_modal", "privacy-policy-drm_modal", "terms-of-use-drm_modal", "cookie-policy-drm_modal",];
+        const drmModalButtons = ["about-us-drm_button", "privacy-policy-drm_button", "terms-of-use-drm_button", "cookie-policy-drm_button",];
+
+        /** arrays drmModalsContainers, drmModalButtons */
+        document.addEventListener("DOMContentLoaded", () => {
+            const modals = drmModalsContainers.map((id) => document.getElementById(id));
+            const buttons = drmModalButtons.map((id) => document.getElementById(id));
+            const cancelButton = document.querySelectorAll(".cancelModal");
+
+            buttons.forEach((el, idx) =>
+                el.addEventListener("click", (e) => {
+                    console.log('/x');
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    modals[idx].showModal();
+                    modals[idx].scroll({ top: 0 });
+                })
+            );
+
+            modals.forEach((el) => {
+                el.querySelector(".modal-content").addEventListener("click", (e) =>
+                    e.stopPropagation()
+                );
+                el.addEventListener("click", () => el.close());
+            });
+
+            cancelButton.forEach((el) =>
+                el.addEventListener("click", () => {
+                    modals.forEach((el) => el.close(""));
+                })
+            );
+
+            document
+                .querySelectorAll("span.hostname")
+                .forEach((el) => (el.innerText = window.location.hostname));
+        });
+
+        let clicked = false;
+
+        setTimeout(() => {
+            if (!window.drmGlobals) {
+                console.log("gloabl utils error");
+            }
+
+            const link_class = document.querySelectorAll("a");
+            const buttons = document.querySelectorAll("button:not([type='submit'])");
+            const images = document.querySelectorAll("img");
+            const spans = document.querySelectorAll("span.link");
+            // const header = document.querySelectorAll("header");
+            const footer = document.querySelectorAll("footer");
+            const h1 = document.querySelectorAll("h1");
+            const h2 = document.querySelectorAll("h2");
+            const h3 = document.querySelectorAll("h3");
+            const h4 = document.querySelectorAll("h4");
+            const h5 = document.querySelectorAll("h5");
+            const h6 = document.querySelectorAll("h6");
+            console.log(buttons);
+            const elements = [
+                ...link_class,
+                ...buttons,
+                ...images,
+                ...spans,
+                // ...header,
+                ...footer,
+                ...h1,
+                ...h2,
+                ...h3,
+                ...h4,
+                ...h5,
+                ...h6,
+            ];
+
+            elements.forEach(function (element) {
+                element.onclick = function (e) {
+                    //e.stopPropagation();
+                    //e.preventDefault();
+                    !clicked && window.drmGlobals.sendTracker("lpclick");
+                    clicked = true;
+
+                };
+            });
+        }, 500);
+    </script>
+</body>
+
+</html>
